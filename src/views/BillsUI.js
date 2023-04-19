@@ -20,15 +20,13 @@ const row = (bill) => {
 };
 
 const rows = (data) => {
+  if (!data || !data.length) return "";
+
   const sortDescByDate = (a, b) => (a.date < b.date ? 1 : -1);
 
-  if (data && data.length) {
-    const dataSorted = [...data].sort(sortDescByDate);
+  const dataSorted = [...data].sort(sortDescByDate);
 
-    return dataSorted.map((bill) => row(bill)).join("");
-  }
-
-  return "";
+  return dataSorted.map((bill) => row(bill)).join("");
 };
 
 export default ({ data: bills, loading, error }) => {
