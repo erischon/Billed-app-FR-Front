@@ -46,6 +46,9 @@ export default class Login {
       });
   };
 
+  /**
+   * Handle submit for admin form
+   */
   handleSubmitAdmin = (e) => {
     e.preventDefault();
     const user = {
