@@ -65,16 +65,16 @@ describe("When I am on Bills page", () => {
     // On crée un mock du document et on instancie la classe Bills pour chaque test
     // document.body.innerHTML = BillsUI({ data: bills });
 
-    Object.defineProperty(window, "localStorage", {
-      value: localStorageMock,
-    });
+    // Object.defineProperty(window, "localStorage", {
+    //   value: localStorageMock,
+    // });
 
-    window.localStorage.setItem(
-      "user",
-      JSON.stringify({
-        type: "Employee",
-      })
-    );
+    // window.localStorage.setItem(
+    //   "user",
+    //   JSON.stringify({
+    //     type: "Employee",
+    //   })
+    // );
 
     component = new Bills({
       document,
@@ -122,5 +122,83 @@ describe("When I am on Bills page", () => {
 
     // Assert
     expect(result.length).toBeGreaterThan(0);
+    expect(result).toBe("");
   });
 });
+
+// test d'intégration GET
+// describe("Given I am a user connected as Employee", () => {
+//   describe("When I navigate to Bills Page", () => {
+//     test("fetches bills from mock API GET", async () => {
+//       // Arrange
+//       localStorage.setItem(
+//         "user",
+//         JSON.stringify({ type: "Employee", email: "a@a" })
+//       );
+//       const root = document.createElement("div");
+//       root.setAttribute("id", "root");
+//       document.body.append(root);
+
+//       // Act
+//       router();
+//       window.onNavigate(ROUTES_PATH.Bills);
+//       await waitFor(() => screen.getByText("Validations"));
+//       const contentPending = await screen.getByText("En attente (1)");
+
+//       // Assert
+//       expect(contentPending).toBeTruthy();
+//       const contentRefused = await screen.getByText("Refusé (2)");
+//       expect(contentRefused).toBeTruthy();
+//       expect(screen.getByTestId("big-billed-icon")).toBeTruthy();
+//     });
+
+//     // describe("When an error occurs on API", () => {
+//     //   beforeEach(() => {
+//     //     jest.spyOn(mockStore, "bills");
+//     //     Object.defineProperty(window, "localStorage", {
+//     //       value: localStorageMock,
+//     //     });
+//     //     window.localStorage.setItem(
+//     //       "user",
+//     //       JSON.stringify({
+//     //         type: "Admin",
+//     //         email: "a@a",
+//     //       })
+//     //     );
+//     //     const root = document.createElement("div");
+//     //     root.setAttribute("id", "root");
+//     //     document.body.appendChild(root);
+//     //     router();
+//     //   });
+
+//     //   test("fetches bills from an API and fails with 404 message error", async () => {
+//     //     mockStore.bills.mockImplementationOnce(() => {
+//     //       return {
+//     //         list: () => {
+//     //           return Promise.reject(new Error("Erreur 404"));
+//     //         },
+//     //       };
+//     //     });
+//     //     window.onNavigate(ROUTES_PATH.Dashboard);
+//     //     await new Promise(process.nextTick);
+//     //     const message = await screen.getByText(/Erreur 404/);
+//     //     expect(message).toBeTruthy();
+//     //   });
+
+//     //   test("fetches messages from an API and fails with 500 message error", async () => {
+//     //     mockStore.bills.mockImplementationOnce(() => {
+//     //       return {
+//     //         list: () => {
+//     //           return Promise.reject(new Error("Erreur 500"));
+//     //         },
+//     //       };
+//     //     });
+
+//     //     window.onNavigate(ROUTES_PATH.Dashboard);
+//     //     await new Promise(process.nextTick);
+//     //     const message = await screen.getByText(/Erreur 500/);
+//     //     expect(message).toBeTruthy();
+//     //   });
+//     // });
+//   });
+// });
