@@ -1,9 +1,11 @@
 import { ROUTES_PATH } from "../constants/routes.js";
 import { formatDate, formatStatus } from "../app/format.js";
 import Logout from "./Logout.js";
+import mockStore from "../__mocks__/store.js";
 
 export default class {
   constructor({ document, onNavigate, store, localStorage }) {
+    console.log("======store", this.store);
     this.document = document;
     this.onNavigate = onNavigate;
     this.store = store;
@@ -49,6 +51,8 @@ export default class {
             if (A > B) return 1;
             return 0;
           });
+          console.log("======store", this.store.bills().list().then());
+          console.log("======mockstore", mockStore.bills().list().then());
 
           const bills = snapshot.map((doc) => {
             try {
