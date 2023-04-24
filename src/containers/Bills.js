@@ -43,17 +43,6 @@ export default class {
         .bills()
         .list()
         .then((snapshot) => {
-          // Sort the snapshot by descendant date
-          snapshot.sort((a, b) => {
-            const A = new Date(a.date);
-            const B = new Date(b.date);
-            if (A < B) return -1;
-            if (A > B) return 1;
-            return 0;
-          });
-          console.log("======store", this.store.bills().list().then());
-          console.log("======mockstore", mockStore.bills().list().then());
-
           const bills = snapshot.map((doc) => {
             try {
               return {
