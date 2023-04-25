@@ -18,7 +18,7 @@ describe("Given I am connected as an employee", () => {
       instance = new NewBill({
         document: document,
         onNavigate: jest.fn(),
-        store: {},
+        store: mockStore,
         localStorage: {},
       });
 
@@ -29,6 +29,27 @@ describe("Given I am connected as an employee", () => {
           email: "a@a",
         })
       );
+    });
+
+    describe("When I click on Submit", () => {
+      test("Then it handle the event", () => {
+        // Arrange
+        const event = {
+          preventDefault: jest.fn(),
+
+          target: {
+            querySelector: jest.fn(() => ({
+              value: "",
+            })),
+          },
+        };
+
+        // Act
+        instance.handleSubmit(event);
+
+        // Assert
+        expect(event.preventDefault).toHaveBeenCalled();
+      });
     });
 
     describe("When I upload a file", () => {
@@ -52,36 +73,22 @@ describe("Given I am connected as an employee", () => {
         );
         expect(fakeEvent.target.value).toBe("");
       });
-    });
-  });
-});
 
-describe("NewBill", () => {
-  describe("handleSubmit", () => {
-    test("Then should prevent the default form submission behavior", () => {
-      // Arrange
-      const event = {
-        preventDefault: jest.fn(),
+      test("Then it should load the image", () => {
+        // Arrange
+        const fakeEvent = {
+          preventDefault: jest.fn(),
+          target: {
+            value: "image.jpg",
+          },
+        };
 
-        target: {
-          querySelector: jest.fn(() => ({
-            value: "",
-          })),
-        },
-      };
+        // Act
+        instance.handleChangeFile(fakeEvent);
 
-      const newBill = new NewBill({
-        document: document,
-        onNavigate: jest.fn(),
-        store: mockStore,
-        localStorage: {},
+        // Assert
+        expect(fakeEvent.target.value).toBe("image.jpg");
       });
-
-      // Act
-      newBill.handleSubmit(event);
-
-      // Assert
-      expect(event.preventDefault).toHaveBeenCalled();
     });
   });
 });
