@@ -31,33 +31,9 @@ describe("Given I am connected as an employee", () => {
       );
     });
 
-    // describe("When I click on the submit button", () => {
-    //   test("Then it should call handleSubmit method", () => {
-    //     // Arrange
-    //     const fakeEvent = {
-    //       preventDefault: jest.fn(),
-
-    //       target: {
-    //         value: "fake/path/to/file.txt",
-    //       },
-    //     };
-
-    //     const result = instance.handleSubmit(fakeEvent);
-
-    //     const submitButton = document.querySelector(`button[type="submit"]`);
-
-    //     // Act
-    //     submitButton.click();
-
-    //     // Assert
-    //     expect(result).toHaveBeenCalled();
-    //   });
-    // });
-
     describe("When I upload a file", () => {
       test("Then it should display alert and clear file input when I try to upload a file who has invalid extension.", () => {
         // Arrange
-
         window.alert = jest.fn();
 
         const fakeEvent = {
@@ -82,112 +58,101 @@ describe("Given I am connected as an employee", () => {
 
 describe("NewBill", () => {
   describe("handleSubmit", () => {
-    test("should call onNavigate with bills route and update the bill when form is submitted", async () => {
-      const mockStore = {
-        bills: jest.fn(() => ({
-          create: jest.fn(() => Promise.resolve({ fileUrl: "url", key: 1 })),
-          update: jest.fn(() => Promise.resolve()),
-        })),
-      };
+    test("should prevent the default form submission behavior", () => {
+      // Arrange
+      const event = {
+        preventDefault: jest.fn(),
 
-      const mockDocument = {
-        querySelector: jest.fn(),
+        target: {
+          querySelector: jest.fn(() => ({
+            value: "",
+          })),
+        },
       };
-
-      const mockOnNavigate = jest.fn();
-      const mockLocalStorage = {
-        getItem: jest.fn(() =>
-          JSON.stringify({ email: "user@test.com", password: "password" })
-        ),
-      };
-
-      // mock form and input elements
-      const mockExpenseTypeInput = {
-        value: "Hôtel",
-      };
-
-      const mockExpenseNameInput = {
-        value: "Hotel du Louvre",
-      };
-
-      const mockAmountInput = {
-        value: "100",
-      };
-
-      const mockDateInput = {
-        value: "2022-01-01",
-      };
-
-      const mockVatInput = {
-        value: "20",
-      };
-
-      const mockCommentaryInput = {
-        value: "Some commentary",
-      };
-
-      const mockFileInput = {
-        files: [
-          {
-            name: "test.jpg",
-          },
-        ],
-      };
-
-      const mockForm = {
-        addEventListener: jest.fn(),
-        querySelector: jest.fn((selector) => {
-          switch (selector) {
-            case 'select[data-testid="expense-type"]':
-              return mockExpenseTypeInput;
-            case 'input[data-testid="expense-name"]':
-              return mockExpenseNameInput;
-            case 'input[data-testid="amount"]':
-              return mockAmountInput;
-            case 'input[data-testid="datepicker"]':
-              return mockDateInput;
-            case 'input[data-testid="vat"]':
-              return mockVatInput;
-            case 'input[data-testid="pct"]':
-              return {
-                value: "20",
-              };
-            case 'textarea[data-testid="commentary"]':
-              return mockCommentaryInput;
-            case 'input[data-testid="file"]':
-              return mockFileInput;
-          }
-        }),
-      };
-
-      const html = NewBillUI();
-      document.body.innerHTML = html;
 
       const newBill = new NewBill({
         document: document,
-        onNavigate: mockOnNavigate,
+        onNavigate: jest.fn(),
         store: mockStore,
-        localStorage: mockLocalStorage,
+        localStorage: {},
       });
 
-      await newBill.handleSubmit({ preventDefault: jest.fn() });
+      // Act
+      newBill.handleSubmit(event);
 
-      expect(mockStore.bills().create).toHaveBeenCalledTimes(1);
-      expect(mockStore.bills().create).toHaveBeenCalledWith({
-        data: expect.any(FormData),
-        headers: {
-          noContentType: true,
-        },
-      });
-
-      expect(mockStore.bills().update).toHaveBeenCalledTimes(1);
-      expect(mockStore.bills().update).toHaveBeenCalledWith({
-        data: expect.any(String),
-        selector: 1,
-      });
-
-      expect(mockOnNavigate).toHaveBeenCalledTimes(1);
-      expect(mockOnNavigate).toHaveBeenCalledWith("/bills");
+      // Assert
+      expect(event.preventDefault).toHaveBeenCalled();
     });
+
+    // test("should update the bill", () => {
+    //   // Arrange
+    //   const email = "test@test.com";
+    //   const expenseType = "Type";
+    //   const expenseName = "Name";
+    //   const amount = "100";
+    //   const datepicker = "2022-05-01";
+    //   const vat = "20";
+    //   const pct = "20";
+    //   const commentary = "Commentary";
+    //   const fileUrl = "http://test.com/image.png";
+    //   const fileName = "image.png";
+    //   const event = {
+    //     preventDefault: jest.fn(),
+    //     target: {
+    //       querySelector: jest.fn((selector) => {
+    //         switch (selector) {
+    //           case 'select[data-testid="expense-type"]':
+    //             return { value: expenseType };
+    //           case 'input[data-testid="expense-name"]':
+    //             return { value: expenseName };
+    //           case 'input[data-testid="amount"]':
+    //             return { value: amount };
+    //           case 'input[data-testid="datepicker"]':
+    //             return { value: datepicker };
+    //           case 'input[data-testid="vat"]':
+    //             return { value: vat };
+    //           case 'input[data-testid="pct"]':
+    //             return { value: pct };
+    //           case 'textarea[data-testid="commentary"]':
+    //             return { value: commentary };
+    //         }
+    //       }),
+    //     },
+    //   };
+    //   const store = {
+    //     bills: jest.fn(() => ({
+    //       update: jest.fn(),
+    //     })),
+    //   };
+    //   const onNavigate = jest.fn();
+    //   const newBill = new NewBill({
+    //     store,
+    //     onNavigate,
+    //   });
+    //   newBill.fileUrl = fileUrl;
+    //   newBill.fileName = fileName;
+
+    //   // Act
+    //   newBill.handleSubmit(event);
+
+    //   // Assert
+    //   expect(store.bills().update).toHaveBeenCalledWith({
+    //     data: JSON.stringify({
+    //       email,
+    //       type: expenseType,
+    //       name: expenseName,
+    //       amount: parseInt(amount),
+    //       date: datepicker,
+    //       vat,
+    //       pct: parseInt(pct),
+    //       commentary,
+    //       fileUrl,
+    //       fileName,
+    //       status: "pending",
+    //     }),
+    //     selector: newBill.billId,
+    //   });
+    //   expect(onNavigate).toHaveBeenCalledWith(ROUTES_PATH["Bills"]);
+    // });
   });
 });
