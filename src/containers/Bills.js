@@ -5,7 +5,6 @@ import mockStore from "../__mocks__/store.js";
 
 export default class {
   constructor({ document, onNavigate, store, localStorage }) {
-    console.log("======store", this.store);
     this.document = document;
     this.onNavigate = onNavigate;
     this.store = store;

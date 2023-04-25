@@ -38,6 +38,7 @@ export default class NewBill {
 
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
+    console.log("======file", file);
     const filePath = e.target.value.split(/\\/g);
     const fileName = filePath[filePath.length - 1];
     const formData = new FormData();
@@ -69,10 +70,10 @@ export default class NewBill {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    // console.log(
-    //   'e.target.querySelector(`input[data-testid="datepicker"]`).value',
-    //   e.target.querySelector(`input[data-testid="datepicker"]`).value
-    // );
+    console.log(
+      'e.target.querySelector(`input[data-testid="datepicker"]`).value',
+      e.target.querySelector(`input[data-testid="datepicker"]`).value
+    );
 
     const email = JSON.parse(localStorage.getItem("user")).email;
     const bill = {
