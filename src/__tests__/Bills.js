@@ -55,74 +55,57 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });
-  });
-});
 
-describe("When I am on Bills page", () => {
-  let component;
+    let component;
 
-  beforeEach(() => {
-    // On crée un mock du document et on instancie la classe Bills pour chaque test
-    // document.body.innerHTML = BillsUI({ data: bills });
-
-    // Object.defineProperty(window, "localStorage", {
-    //   value: localStorageMock,
-    // });
-
-    // window.localStorage.setItem(
-    //   "user",
-    //   JSON.stringify({
-    //     type: "Employee",
-    //   })
-    // );
-
-    component = new Bills({
-      document,
-      onNavigate: jest.fn(),
-      store: mockStore,
-      localStorage: window.localStorage,
+    beforeEach(() => {
+      component = new Bills({
+        document,
+        onNavigate: jest.fn(),
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
     });
-  });
 
-  test("Then it should add click listener to buttonNewBill", () => {
-    // Arrange
-    const buttonNewBill = document.querySelector(
-      `button[data-testid="btn-new-bill"]`
-    );
+    test("Then there should be a click listener to buttonNewBill", () => {
+      // Arrange
+      const buttonNewBill = document.querySelector(
+        `button[data-testid="btn-new-bill"]`
+      );
 
-    // Act
-    buttonNewBill.click(); // On simule un clic sur le bouton
+      // Act
+      buttonNewBill.click(); // On simule un clic sur le bouton
 
-    // Assert
-    expect(buttonNewBill).toHaveProperty("onclick"); // Check if the icon has an onclick property
-    expect(component.onNavigate).toHaveBeenCalledWith("#employee/bill/new"); // Check if the onNavigate method has been called with the correct URL
-  });
+      // Assert
+      expect(buttonNewBill).toHaveProperty("onclick"); // Check if the icon has an onclick property
+      expect(component.onNavigate).toHaveBeenCalledWith("#employee/bill/new"); // Check if the onNavigate method has been called with the correct URL
+    });
 
-  test("Then it should add click listener to iconEye", () => {
-    $.fn.modal = jest.fn(); // Mocking JQuery's modal function
+    test("Then there should be a click listener to iconEye", () => {
+      $.fn.modal = jest.fn(); // Mocking JQuery's modal function
 
-    // Arrange
-    const iconEye = document.querySelector(`div[data-testid="icon-eye"]`);
-    const clickHandler = jest.fn();
-    iconEye.onclick = clickHandler;
+      // Arrange
+      const iconEye = document.querySelector(`div[data-testid="icon-eye"]`);
+      const clickHandler = jest.fn();
+      iconEye.onclick = clickHandler;
 
-    // Act
-    fireEvent.click(iconEye); // Simulate a click on the icon
+      // Act
+      fireEvent.click(iconEye); // Simulate a click on the icon
 
-    // Assert
-    expect(iconEye).toHaveProperty("onclick"); // Check if the icon has an onclick property
-    expect(clickHandler).toHaveBeenCalled(); // Check if the clickHandler has been called
-  });
+      // Assert
+      expect(iconEye).toHaveProperty("onclick"); // Check if the icon has an onclick property
+      expect(clickHandler).toHaveBeenCalled(); // Check if the clickHandler has been called
+    });
 
-  test("Then there is a non empty bill list", async () => {
-    // Arrange
+    test("Then there should be a non-empty bill list that displays", async () => {
+      // Arrange
 
-    // Act
-    const result = await component.getBills();
+      // Act
+      const result = await component.getBills();
 
-    // Assert
-    expect(result.length).toBeGreaterThan(0);
-    expect(result).toBe("");
+      // Assert
+      expect(result.length).toBeGreaterThan(0);
+    });
   });
 });
 
