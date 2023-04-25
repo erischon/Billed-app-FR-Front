@@ -156,3 +156,88 @@ describe("NewBill", () => {
     // });
   });
 });
+
+describe("NewBill 2", () => {
+  describe("handleChangeFile", () => {
+    let storeMock;
+    let newBill;
+
+    beforeEach(() => {
+      storeMock = {
+        bills: jest.fn(() => ({
+          create: jest.fn(() =>
+            Promise.resolve({
+              fileUrl: "https://example.com/image.jpg",
+              key: "123456789",
+            })
+          ),
+        })),
+      };
+
+      const documentMock = {
+        querySelector: jest.fn((selector) => {
+          if (selector === 'form[data-testid="form-new-bill"]') {
+            return {
+              addEventListener: jest.fn(),
+            };
+          } else if (selector === 'input[data-testid="file"]') {
+            return {
+              addEventListener: jest.fn(),
+              files: [new File([], "test.jpg")],
+              value: "C:\\fakepath\\test.jpg",
+            };
+          }
+        }),
+      };
+
+      newBill = new NewBill({
+        document: documentMock,
+        store: storeMock,
+        onNavigate: () => {},
+        localStorage: {
+          getItem: jest.fn(() =>
+            JSON.stringify({
+              email: "user@example.com",
+            })
+          ),
+        },
+      });
+    });
+
+    test("should call store.bills().create() with the right arguments", () => {
+      const formDataMock = new FormData();
+      formDataMock.append("file", new File([], "test.jpg"));
+      formDataMock.append("email", "user@example.com");
+
+      const expectedData = {
+        data: formDataMock,
+        headers: {
+          noContentType: true,
+        },
+      };
+
+      return newBill.handleChangeFile(new Event("change")).then(() => {
+        expect(storeMock.bills().create).toHaveBeenCalledWith(expectedData);
+      });
+    });
+
+    test("should update fileUrl, fileName and billId when store.bills().create() resolves", () => {
+      return newBill.handleChangeFile(new Event("change")).then(() => {
+        expect(newBill.fileUrl).toBe("https://example.com/image.jpg");
+        expect(newBill.fileName).toBe("test.jpg");
+        expect(newBill.billId).toBe("123456789");
+      });
+    });
+
+    test("should log an error when store.bills().create() rejects", () => {
+      storeMock
+        .bills()
+        .create.mockImplementationOnce(() => Promise.reject("error"));
+      console.error = jest.fn();
+
+      return newBill.handleChangeFile(new Event("change")).then(() => {
+        expect(console.error).toHaveBeenCalledWith("error");
+      });
+    });
+  });
+});
