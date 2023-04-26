@@ -102,11 +102,14 @@ describe("Given I am connected as an employee", () => {
   });
 });
 
-describe("When I am on NewBill Page and I add a new Bill POST", () => {
-  test("should added newBill POST", async () => {
+describe("When I am on NewBill Page", () => {
+  let inputData;
+
+  beforeAll(async () => {
     Object.defineProperty(window, "localStorage", {
       value: localStorageMock,
     });
+
     window.localStorage.setItem(
       "user",
       JSON.stringify({
@@ -117,49 +120,55 @@ describe("When I am on NewBill Page and I add a new Bill POST", () => {
 
     document.body.innerHTML = NewBillUI();
 
-    const inputData = {
-      type: "Hôtel et logement",
-      name: "encore",
-      amount: "400",
-      date: "2004-04-04",
-      vat: "80",
-      pct: "20",
-      commentary: "séminaire billed",
-      fileUrl:
-        "https://test.storage.tld/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
-      fileName: "preview-facture-free-201801-pdf-1.jpg",
-      status: "pending",
+    const data = await mockStore.bills().list();
+
+    inputData = {
+      type: data[0].type,
+      name: data[0].name,
+      amount: data[0].amount.toString(),
+      date: data[0].date,
+      vat: data[0].vat,
+      pct: data[0].pct.toString(),
+      commentary: data[0].commentary,
+      fileUrl: data[0].fileUrl,
+      fileName: data[0].fileName,
+      status: data[0].status,
     };
+  });
 
+  test("Then the values I filled are in the right place", () => {
+    // Arrange
     const inputType = screen.getByTestId("expense-type");
-    fireEvent.change(inputType, { target: { value: inputData.type } });
-    expect(inputType.value).toBe(inputData.type);
-
     const inputName = screen.getByTestId("expense-name");
-    fireEvent.change(inputName, { target: { value: inputData.name } });
-    expect(inputName.value).toBe(inputData.name);
-
     const inputDate = screen.getByTestId("datepicker");
-    fireEvent.change(inputDate, { target: { value: inputData.date } });
-    expect(inputDate.value).toBe(inputData.date);
-
     const inputAmount = screen.getByTestId("amount");
-    fireEvent.change(inputAmount, { target: { value: inputData.amount } });
-    expect(inputAmount.value).toBe(inputData.amount);
-
     const inputVat = screen.getByTestId("vat");
-    fireEvent.change(inputVat, { target: { value: inputData.vat } });
-    expect(inputVat.value).toBe(inputData.vat);
-
     const inputPct = screen.getByTestId("pct");
-    fireEvent.change(inputPct, { target: { value: inputData.pct } });
-    expect(inputPct.value).toBe(inputData.pct);
-
     const inputCommentary = screen.getByTestId("commentary");
+
+    // Act
+    fireEvent.change(inputType, { target: { value: inputData.type } });
+    fireEvent.change(inputName, { target: { value: inputData.name } });
+    fireEvent.change(inputDate, { target: { value: inputData.date } });
+    fireEvent.change(inputAmount, { target: { value: inputData.amount } });
+    fireEvent.change(inputVat, { target: { value: inputData.vat } });
+    fireEvent.change(inputPct, { target: { value: inputData.pct } });
     fireEvent.change(inputCommentary, {
       target: { value: inputData.commentary },
     });
+
+    // Assert
+    expect(inputType.value).toBe(inputData.type);
+    expect(inputName.value).toBe(inputData.name);
+    expect(inputDate.value).toBe(inputData.date);
+    expect(inputAmount.value).toBe(inputData.amount);
+    expect(inputVat.value).toBe(inputData.vat);
+    expect(inputPct.value).toBe(inputData.pct);
     expect(inputCommentary.value).toBe(inputData.commentary);
+  });
+
+  test("Then it should added newBill POST", async () => {
+    // Arrange
 
     const onNavigate = (pathname) => {
       document.body.innerHTML = ROUTES({ pathname });
@@ -189,6 +198,7 @@ describe("When I am on NewBill Page and I add a new Bill POST", () => {
     formNewBill.addEventListener("submit", handleSubmit);
     fireEvent.submit(formNewBill);
 
+    // Assert
     expect(create.key).toBe("1234");
     expect(create.fileUrl).toBe("https://localhost:3456/images/test.jpg");
 
