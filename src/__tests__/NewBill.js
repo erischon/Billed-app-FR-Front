@@ -3,7 +3,6 @@
  */
 
 import { screen, waitFor, fireEvent } from "@testing-library/dom";
-import userEvent from "@testing-library/user-event";
 
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import router from "../app/Router.js";
