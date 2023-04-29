@@ -42,6 +42,11 @@ export default class {
         .bills()
         .list()
         .then((snapshot) => {
+          // Sort the snapshot by descendant date
+          snapshot.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          });
+
           const bills = snapshot.map((doc) => {
             try {
               return {
