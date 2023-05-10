@@ -22,12 +22,12 @@ const row = (bill) => {
 const rows = (data) => {
   if (!data || !data.length) return "";
 
-  const sortDescByDate = (a, b) =>
-    new Date(a.date) < new Date(b.date) ? 1 : -1;
+  // const sortDescByDate = (a, b) =>
+  //   new Date(a.date) < new Date(b.date) ? 1 : -1;
 
-  const dataSorted = [...data].sort(sortDescByDate);
+  // const dataSorted = [...data].sort(sortDescByDate);
 
-  return dataSorted.map((bill) => row(bill)).join("");
+  return data.map((bill) => row(bill)).join("");
 };
 
 export default ({ data: bills, loading, error }) => {

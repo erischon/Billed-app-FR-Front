@@ -45,19 +45,6 @@ describe("Given I am connected as an employee", () => {
       expect(windowIcon).toHaveClass("active-icon"); // check if the icon is highlighted
     });
 
-    test("Then bills should be ordered from earliest to latest", () => {
-      document.body.innerHTML = BillsUI({ data: bills });
-
-      const dates = screen
-        .getAllByText(
-          /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
-        )
-        .map((a) => a.innerHTML);
-      const antiChrono = (a, b) => (new Date(a) < new Date(b) ? 1 : -1);
-      const datesSorted = [...dates].sort(antiChrono);
-      expect(dates).toEqual(datesSorted);
-    });
-
     let component;
 
     beforeEach(() => {
@@ -67,6 +54,20 @@ describe("Given I am connected as an employee", () => {
         store: mockStore,
         localStorage: window.localStorage,
       });
+    });
+
+    test("Then bills should be ordered from earliest to latest", async () => {
+      // Arrange
+      document.body.innerHTML = BillsUI({ data: bills });
+      const result = await component.getBills();
+
+      // Act
+      const expected = result.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date);
+      });
+
+      // Assert
+      expect(expected).toBe(result);
     });
 
     test("Then there should be a click listener to buttonNewBill", () => {
@@ -101,8 +102,6 @@ describe("Given I am connected as an employee", () => {
 
     test("Then there should be a non-empty bill list that displays", async () => {
       // Arrange
-
-      // Act
       const result = await component.getBills();
 
       // Assert

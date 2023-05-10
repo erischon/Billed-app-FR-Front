@@ -140,12 +140,19 @@ export default class {
     this.onNavigate(ROUTES_PATH["Dashboard"]);
   };
 
-  //
+  /**
+   * Handle the showing of tickets for a specific status
+   * @param {object} e  event
+   * @param {object[]} bills list of bills
+   * @param {number} index index of the status
+   * @returns
+   */
   handleShowTickets(e, bills, index) {
     if (this.index === undefined || this.index !== index) {
       this.index = index;
     }
 
+    // get the state of the status : is it open (>0) or closed (-1) ?
     const state = this.openStatus.indexOf(index);
 
     if (state === -1) {

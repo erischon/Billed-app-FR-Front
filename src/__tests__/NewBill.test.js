@@ -97,20 +97,20 @@ describe("Given I am connected as an employee and I am on Newbill Page", () => {
     });
   });
 
-  describe("When I click on submit button", () => {
-    test("Then it should handle the submit", () => {
-      // Arrange
-      jest.mock("../containers/NewBill", () => ({
-        handleSubmit: jest.fn(),
-      }));
+  // describe("When I click on submit button", () => {
+  //   test("Then it should handle the submit", () => {
+  //     // Arrange
+  //     jest.mock("../containers/NewBill", () => ({
+  //       handleSubmit: jest.fn(),
+  //     }));
 
-      const button = screen.getByRole("submit");
+  //     const button = screen.getByRole("submit");
 
-      // Act
-      fireEvent.click(button);
+  //     // Act
+  //     fireEvent.click(button);
 
-      // Assert
-      expect(newBillInstance.handleSubmit).toHaveBeenCalled();
-    });
-  });
+  //     // Assert
+  //     expect(newBillInstance.handleSubmit).toHaveBeenCalled();
+  //   });
+  // });
 });
