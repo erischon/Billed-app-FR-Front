@@ -62,8 +62,6 @@ describe("Given I am connected as an employee", () => {
 
     test("Then bills should be ordered from earliest to latest", async () => {
       // Arrange
-      document.body.innerHTML = BillsUI({ data: bills });
-
       const result = await component.getBills();
 
       for (let i = 0; i < result.length; i++) {
@@ -96,6 +94,7 @@ describe("Given I am connected as an employee", () => {
       $.fn.modal = jest.fn(); // Mocking JQuery's modal function
 
       // Arrange
+      document.body.innerHTML = BillsUI({ data: bills });
       const iconEye = document.querySelector(`div[data-testid="icon-eye"]`);
       const clickHandler = jest.fn();
       iconEye.onclick = clickHandler;
@@ -144,6 +143,7 @@ describe("Given I am a user connected as Employee", () => {
 
     test("fetches bills from mock API GET", async () => {
       // Arrange
+      document.body.innerHTML = BillsUI({ data: bills });
       const store = await mockStore.bills().list();
 
       // Act
