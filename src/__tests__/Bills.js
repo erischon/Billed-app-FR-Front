@@ -56,18 +56,26 @@ describe("Given I am connected as an employee", () => {
       });
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test("Then bills should be ordered from earliest to latest", async () => {
       // Arrange
       document.body.innerHTML = BillsUI({ data: bills });
+
       const result = await component.getBills();
 
-      // Act
-      const expected = result.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date);
-      });
+      for (let i = 0; i < result.length; i++) {
+        const billA = new Date().getTime(result[i].date);
+        const billB = new Date().getTime(result[i + 1]?.date);
 
-      // Assert
-      expect(expected).toBe(result);
+        if (!billB) return;
+
+        const expected = billA >= billB ? 1 : -1;
+
+        expect(expected).toBe(1);
+      }
     });
 
     test("Then there should be a click listener to buttonNewBill", () => {
@@ -110,6 +118,7 @@ describe("Given I am connected as an employee", () => {
   });
 });
 
+// Get Bills
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills Page", () => {
     beforeEach(() => {

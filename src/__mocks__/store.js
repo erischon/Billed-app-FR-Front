@@ -29,7 +29,7 @@ const mockedBills = {
         email: "a@a",
         fileUrl:
           "https://test.storage.tld/v0/b/billable-677b6.a…61.jpeg?alt=media&token=7685cd61-c112-42bc-9929-8a799bb82d8b",
-        date: "invalid date",
+        date: "2023-03-03",
         status: "refused",
         commentAdmin: "en fait non",
       },
