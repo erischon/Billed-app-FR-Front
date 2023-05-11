@@ -141,7 +141,7 @@ describe("Given I am a user connected as Employee", () => {
       router();
     });
 
-    test("fetches bills from mock API GET", async () => {
+    it("fetches bills from mock API GET", async () => {
       // Arrange
       document.body.innerHTML = BillsUI({ data: bills });
       const store = await mockStore.bills().list();
@@ -157,7 +157,7 @@ describe("Given I am a user connected as Employee", () => {
     });
 
     describe("When an error occurs on API", () => {
-      test("fetches bills from an API and fails with 404 message error", async () => {
+      it("fetches bills from an API and fails with 404 message error", async () => {
         // Arrange
         mockStore.bills.mockImplementationOnce(() => {
           return {
@@ -176,7 +176,7 @@ describe("Given I am a user connected as Employee", () => {
         expect(message).toBeTruthy();
       });
 
-      test("fetches messages from an API and fails with 500 message error", async () => {
+      it("fetches messages from an API and fails with 500 message error", async () => {
         // Arrange
         mockStore.bills.mockImplementationOnce(() => {
           return {
