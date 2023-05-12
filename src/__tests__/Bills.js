@@ -47,7 +47,9 @@ describe("Given I am connected as an employee", () => {
 
     let component;
 
-    beforeEach(() => {
+    beforeAll(() => {
+      document.body.innerHTML = BillsUI({ data: bills });
+
       component = new Bills({
         document,
         onNavigate: jest.fn(),
@@ -56,7 +58,7 @@ describe("Given I am connected as an employee", () => {
       });
     });
 
-    afterEach(() => {
+    afterAll(() => {
       jest.clearAllMocks();
     });
 
@@ -94,7 +96,6 @@ describe("Given I am connected as an employee", () => {
       $.fn.modal = jest.fn(); // Mocking JQuery's modal function
 
       // Arrange
-      document.body.innerHTML = BillsUI({ data: bills });
       const iconEye = document.querySelector(`div[data-testid="icon-eye"]`);
       const clickHandler = jest.fn();
       iconEye.onclick = clickHandler;
@@ -113,6 +114,37 @@ describe("Given I am connected as an employee", () => {
 
       // Assert
       expect(result.length).toBeGreaterThan(0);
+    });
+
+    it("Return unformated date if the date is corrupted", async () => {
+      // Arrange
+      const billWithCorruptedDate = Promise.resolve([
+        {
+          id: "47qAXb6fIm2zOKkLzMro",
+          vat: "80",
+          fileUrl:
+            "https://test.storage.tld/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
+          status: "pending",
+          type: "Hôtel et logement",
+          commentary: "séminaire billed",
+          name: "encore",
+          fileName: "preview-facture-free-201801-pdf-1.jpg",
+          date: "corrupted date",
+          amount: 400,
+          commentAdmin: "ok",
+          email: "a@a",
+          pct: 20,
+        },
+      ]);
+      component.getBills = jest.fn().mockResolvedValue(billWithCorruptedDate);
+
+      // Act
+      const result = await component.formatBills();
+
+      // Assert
+      expect(result[0].date).toBe("corrupted date");
+
+      component.getBills.mockRestore();
     });
   });
 });
