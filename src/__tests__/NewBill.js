@@ -206,4 +206,66 @@ describe("When I am on NewBill Page", () => {
     expect(createBills).toHaveBeenCalled();
     expect(formNewBill).toBeTruthy();
   });
+
+  jest.mock("../app/Store", () => mockStore);
+
+  describe("When i create a new bill and an error occurs on API", () => {
+    let newBill;
+    beforeEach(() => {
+      const root = document.createElement("div");
+      root.setAttribute("id", "root");
+      document.body.append(root);
+      router();
+      document.body.innerHTML = NewBillUI();
+      window.onNavigate(ROUTES_PATH.NewBill);
+
+      // New instance of NewBill
+      newBill = new NewBill({
+        document,
+        onNavigate: jest.fn(),
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+    });
+
+    test("Then it fail with 404 message error", async () => {
+      // Arrange
+      jest.spyOn(mockStore, "bills");
+
+      const billError = mockStore.bills.mockImplementationOnce(() => {
+        return {
+          update: () => {
+            return Promise.reject(new Error("Erreur 404"));
+          },
+        };
+      });
+
+      // Act & Assert
+      await expect(billError().update).rejects.toThrow("Erreur 404");
+
+      // Assert
+      expect(billError).toHaveBeenCalled;
+      expect(newBill.billId).toBeNull();
+    });
+
+    test("Then it fails with 500 message error", async () => {
+      // Arrange
+      jest.spyOn(mockStore, "bills");
+
+      const billError = mockStore.bills.mockImplementationOnce(() => {
+        return {
+          update: () => {
+            return Promise.reject(new Error("Erreur 500"));
+          },
+        };
+      });
+
+      // Act & Assert
+      await expect(billError().update).rejects.toThrow("Erreur 500");
+
+      // Assert
+      expect(billError).toHaveBeenCalled;
+      expect(newBill.billId).toBeNull();
+    });
+  });
 });
