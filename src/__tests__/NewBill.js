@@ -215,7 +215,9 @@ describe("When I am on NewBill Page", () => {
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.append(root);
+
       router();
+
       document.body.innerHTML = NewBillUI();
       window.onNavigate(ROUTES_PATH.NewBill);
 
