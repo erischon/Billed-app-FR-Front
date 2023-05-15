@@ -137,7 +137,7 @@ describe("When I am on NewBill Page", () => {
     };
   });
 
-  test("Then the values I filled are in the right place", () => {
+  it("filled the values in the right place.", () => {
     // Arrange
     const inputType = screen.getByTestId("expense-type");
     const inputName = screen.getByTestId("expense-name");
@@ -168,7 +168,7 @@ describe("When I am on NewBill Page", () => {
     expect(inputCommentary.value).toBe(inputData.commentary);
   });
 
-  test("Then it should added newBill POST", async () => {
+  it("should added newBill POST.", async () => {
     // Arrange
     const onNavigate = (pathname) => {
       document.body.innerHTML = ROUTES({ pathname });
@@ -230,7 +230,7 @@ describe("When I am on NewBill Page", () => {
       });
     });
 
-    test("Then it fail with 404 message error", async () => {
+    it("fail with 404 message error if it's a refused access.", async () => {
       // Arrange
       jest.spyOn(mockStore, "bills");
 
@@ -250,7 +250,7 @@ describe("When I am on NewBill Page", () => {
       expect(newBill.billId).toBeNull();
     });
 
-    test("Then it fails with 500 message error", async () => {
+    it("fail with 500 message error if it's a server error.", async () => {
       // Arrange
       jest.spyOn(mockStore, "bills");
 
